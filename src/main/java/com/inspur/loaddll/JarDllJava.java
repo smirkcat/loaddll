@@ -10,6 +10,10 @@ public class JarDllJava {
 
 	// 动态库解压位置
 	static File tempDir = null;
+	// 系统平台名称
+	static String systemType=null;
+	// 动态库扩展名
+	static String libExtension=null;
 
 	public static File getTempDir(File tempDir) {
 		if (tempDir == null) {
@@ -26,6 +30,25 @@ public class JarDllJava {
 		}
 		return tempDir;
 	}
+	
+	static{
+		systemType = System.getProperty("os.name");
+		libExtension = (systemType.toLowerCase().indexOf("win") != -1) ? ".dll" : ".so";
+	}
+	/**
+	 * classpath路径获取
+	 * @param cls
+	 * @return
+	 */
+	public static String rootPath(Class<?> cls){
+		String rootPath=cls.getResource("/").getFile().toString();
+		// 特别注意getAppPath返回有斜杠。linux下不需要去掉，windows需要去掉
+		if ((systemType.toLowerCase().indexOf("win") != -1)) {
+			// windows下去掉斜杠
+			rootPath = rootPath.substring(1, rootPath.length());
+		}
+		return rootPath;
+	}
 
 	/**
 	 * 加载dllpath下的libName库文件，windows libName.dll linux libName.so
@@ -40,11 +63,9 @@ public class JarDllJava {
 	 * @throws IOException
 	 *             抛出异常
 	 */
-	private synchronized static void loadLib(String libName, String dllpath, Class cls) throws IOException {
-		String systemType = System.getProperty("os.name");
-		String libExtension = (systemType.toLowerCase().indexOf("win") != -1) ? ".dll" : ".so";
+	public static void loadLib(String libName, String dllpath, Class<?> cls) throws IOException {
+
 		String libFullName = dllpath + libName + libExtension;
-		// 特别注意getAppPath返回有斜杠。linux下不需要去掉，windows需要去掉
 		tempDir = getTempDir(tempDir);
 		String filepath = tempDir.getAbsolutePath() + "/" + libName + libExtension;
 		File extractedLibFile = new File(filepath);
