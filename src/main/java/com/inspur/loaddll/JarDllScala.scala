@@ -3,6 +3,7 @@ package com.inspur.loaddll
 import java.io._
 import scala.util.control._
 
+//如果没有scala环境编译，请注释本文件
 object JarDllScala {
   val tempDir: File = {
     val tmpdir = new File(System.getProperty("java.io.tmpdir"))
@@ -21,23 +22,6 @@ object JarDllScala {
     }
     tempDirf
   }
-  /*def getTempDir(): File = {
-    if (tempDir == null) {
-      var tmpdir = new File(System.getProperty("java.io.tmpdir"));
-      val loop = new Breaks
-      loop.breakable {
-        for (i <- 0 to 1000) {
-          val f = new File(tmpdir, "dll" + System.nanoTime())
-          if (f.mkdir()) {
-            tempDir = f;
-            tempDir.deleteOnExit();
-            loop.break
-          }
-        }
-      }
-    }
-    tempDir;
-  }*/
   val systemType: String = System.getProperty("os.name")
   var libExtension: String = if (systemType.toLowerCase().indexOf("win") != -1) { ".dll" } else ".so"
   def rootPath(cls:Class[_]): String = {
@@ -50,3 +34,4 @@ object JarDllScala {
     rootPath
   }
 }
+
