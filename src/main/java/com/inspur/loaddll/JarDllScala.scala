@@ -26,12 +26,15 @@ object JarDllScala {
   var libExtension: String = if (systemType.toLowerCase().indexOf("win") != -1) { ".dll" } else ".so"
   def rootPath(cls:Class[_]): String = {
     var rootPath = cls.getResource("/").getFile()
-    // 特别注意getAppPath返回有斜杠。linux下不需要去掉，windows需要去掉
+    // 特别注意rootPath返回有斜杠。linux下不需要去掉，windows需要去掉
     if ((systemType.toLowerCase().indexOf("win") != -1)) {
       // windows下去掉斜杠
       rootPath = rootPath.substring(1, rootPath.length())
     }
     rootPath
+  }
+  def loadlib(libName:String, dllpath:String, cls:Class[_]){
+    
   }
 }
 
