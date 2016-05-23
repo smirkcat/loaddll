@@ -16,7 +16,7 @@
 ![intellij-idea-scala插件安装](resources/intellij-安装scala插件.png)
 #### 注：如果安装失败，请用下面的方法
 #### 图2-2 intellij-idea-scala插件离线安装
-![intellij-idea-scala插件安装](resources/intellij-安装scala插件.png)
+![intellij-idea-scala插件安装](resources/intellij离线安装scala版本.png)
 
 
 
