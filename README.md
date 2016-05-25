@@ -1,6 +1,9 @@
 作者[@李杰][1]
 ### 目录结构遵循[maven标准目录结构][2]
-此项目是用于统一加载动态库，运用了java和scala两种方法,导入后检查是否支持scala环境，不支持，按照下面方式执行
+此项目是用于统一加载动态库，运用了java和scala两种方法,jni方法,参考另一个[项目][5],其中文件放置目录参考项目
+[javacpp][6]
+
+以pom方式导入后检查是否支持scala环境，不支持，按照下面方式执行
 
 ### eclipse(Mars-4.5.1版示例)添加scala插件，以及对现有java项目添加和去除scala编译环境，如下面图示
 #### 图1-1 eclispe-scala插件安装
@@ -25,8 +28,9 @@
 
 
 
-
 [1]: http://weibo.com/smirklijie
 [2]: http://maven.apache.org/guides/introduction/introduction-to-the-standard-directory-layout.html
 [3]: http://scala-ide.org/
 [4]: http://plugins.jetbrains.com/plugin/?idea&id=1347
+[5]: https://git.oschina.net/smirkcat/scalacpptest
+[6]: https://github.com/bytedeco/javacpp
