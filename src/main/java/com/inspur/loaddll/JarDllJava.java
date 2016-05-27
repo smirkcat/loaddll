@@ -8,13 +8,19 @@ import java.io.InputStream;
 
 public class JarDllJava {
 
-	// 动态库解压位置
+	// 动态库解压位置文件属性，用File应该是方便跨平台获取绝对路径以及创建
 	static File tempDir = null;
-	// 系统平台名称
+	// 系统平台动态库后缀名
 	static String systemType=null;
 	// 动态库扩展名
 	static String libExtension=null;
-
+	/**
+	 * 此处代码来源
+	 * https://github.com/bytedeco/javacpp/blob/master/src/main/java/org/bytedeco/javacpp/Loader.java
+	 * public static File getTempDir() //392行 我提取出来是为了方便，二是框架有点大，直接用掌握不了
+	 * @param tempDir
+	 * @return 如果tempDir存在则返回原值，不存在则在临时文件夹下创建与时间相关的问价夹
+	 */
 	public static File getTempDir(File tempDir) {
 		if (tempDir == null) {
 			File tmpdir = new File(System.getProperty("java.io.tmpdir"));
