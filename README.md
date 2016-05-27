@@ -1,7 +1,9 @@
 作者[@李杰][1]
 ### 目录结构遵循[maven标准目录结构][2]
-此项目是用于统一加载动态库，运用了java和scala两种方法,jni方法,参考另一个[项目][5],其中文件放置目录参考项目
-[javacpp][6]
+此项目是用于统一加载动态库，运用了java和scala两种方法,jni方法,参考另一个[项目scalacpptest][5],其中文件放置是目录参考项目
+[javacpp][6]org.bytedeco.javacpp.Loader.java的getTempDir()函数
+
+### 思考，tempDir应该放在一个类下或者两个类比较统一，这样才不会重复解压动态库，加载不同路径动态库
 
 以pom方式导入后检查是否支持scala环境，不支持，按照下面方式执行
 
