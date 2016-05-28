@@ -1,7 +1,7 @@
-作者[@李杰][1]
+作者[@秀才遇到猫][1]
 ### 目录结构遵循[maven标准目录结构][2]
-此项目是用于统一加载动态库，运用了java和scala两种方法,jni方法,参考另一个[项目scalacpptest][5],其中文件放置是目录参考项目
-[javacpp][6]org.bytedeco.javacpp.Loader.java的getTempDir()函数
+* 此项目是用于统一加载linux和windows动态库，运用了java和scala两种语言实现,java方式已经运用到web展示，scala是研究spark预处理图像所想的思路,还未实践
+* jni具体方法参考另一个[scalacpptest][5]，其中动态库解压目录参考项目[javacpp][6]，代码详见<https://github.com/bytedeco/javacpp/blob/master/src/main/java/org/bytedeco/javacpp/Loader.java#L373-L384>
 
 ### 思考，tempDir应该放在一个类下或者两个类比较统一，这样才不会重复解压动态库，加载不同路径动态库
 

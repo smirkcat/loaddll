@@ -16,7 +16,7 @@ public class JarDllJava {
 	static String libExtension=null;
 	/**
 	 * 此处代码来源
-	 * https://github.com/bytedeco/javacpp/blob/master/src/main/java/org/bytedeco/javacpp/Loader.java
+	 * https://github.com/bytedeco/javacpp/blob/master/src/main/java/org/bytedeco/javacpp/Loader.java#L373-L384
 	 * public static File getTempDir() //392行 我提取出来是为了方便，二是框架有点大，直接用掌握不了
 	 * @param tempDir
 	 * @return 如果tempDir存在则返回原值，不存在则在临时文件夹下创建与时间相关的问价夹
@@ -81,7 +81,7 @@ public class JarDllJava {
 					FileOutputStream writer = new FileOutputStream(extractedLibFile)) {
 
 				byte[] buffer = new byte[1024];
-				int len = 0;
+				int len;
 				while ((len = reader.read(buffer)) != -1) {
 					writer.write(buffer, 0, len);
 				}
