@@ -22,9 +22,7 @@
 #### 注：如果安装失败，请用下面的方法
 #### 图2-2 intellij-idea-scala插件离线安装[地址][4]
 ![intellij-scala插件安装](resources/intellij离线安装scala版本.png)
-#### 图2-3 intellij-java添加scalalib
-![intellij-java添加scalalib](resources/intellij-java添加scalalib.png)
-#### 图2-4 intellij-java添加和删除scalalib
+#### 图2-3 intellij-java添加和删除scalalib
 ![intellij添加和去除scalalib](resources/intellij-java添加和去除scalalib.png)
 
 
