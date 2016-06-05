@@ -38,8 +38,19 @@ public class JarDllJava {
 	}
 	
 	static{
+		//https://github.com/bytedeco/javacpp/blob/master/src/main/java/org/bytedeco/javacpp/Loader.java#L68-L96
 		systemType = System.getProperty("os.name");
-		libExtension = (systemType.toLowerCase().indexOf("win") != -1) ? ".dll" : ".so";
+		String osName=systemType.toLowerCase();
+		if(osName.indexOf("win") != -1){
+			libExtension=".dll";
+		}
+		else if(osName.indexOf("mac") != -1){
+			libExtension=".dylib";
+		}
+		else{
+			libExtension =".so";
+		}
+		
 	}
 	/**
 	 * classpath路径获取
@@ -48,7 +59,7 @@ public class JarDllJava {
 	 */
 	public static String rootPath(Class<?> cls){
 		String rootPath=cls.getResource("/").getFile().toString();
-		// 特别注意getAppPath返回有斜杠。linux下不需要去掉，windows需要去掉
+		// 特别注意rootPath返回有斜杠，linux和mac下不需要去掉，windows需要去掉
 		if ((systemType.toLowerCase().indexOf("win") != -1)) {
 			// windows下去掉斜杠
 			rootPath = rootPath.substring(1, rootPath.length());
@@ -57,7 +68,7 @@ public class JarDllJava {
 	}
 
 	/**
-	 * 加载dllpath下的libName库文件，windows libName.dll linux libName.so
+	 * 加载dllpath下的libName库文件，windows libName.dll linux libName.so mac libName.dylib
 	 * 会把动态库问价解压到jar包同级目录下
 	 * 
 	 * @param libName

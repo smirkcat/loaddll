@@ -26,7 +26,12 @@ object JarDllScala {
     tempDirf
   }
   val systemType: String = System.getProperty("os.name")
-  var libExtension: String = if (systemType.toLowerCase().indexOf("win") != -1) { ".dll" } else ".so"
+  val libExtension: String = {
+    val osName=systemType.toLowerCase()
+    if (osName.indexOf("win") != -1)  ".dll" 
+    else if (osName.indexOf("mac") != -1)  ".dylib"
+    else ".so"
+      }
   def rootPath(cls: Class[_]): String = {
     var rootPath = cls.getResource("/").getFile()
     // 特别注意rootPath返回有斜杠。linux下不需要去掉，windows需要去掉
