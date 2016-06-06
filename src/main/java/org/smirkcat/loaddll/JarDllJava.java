@@ -1,4 +1,4 @@
-package com.inspur.loaddll;
+package org.smirkcat.loaddll;
 
 import java.io.BufferedInputStream;
 import java.io.File;
