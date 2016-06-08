@@ -1,4 +1,11 @@
 作者[@秀才遇到猫][1]
+
+### 特别说明
+* 综合测试请看项目[loaddll-test][7]
+* 它是使用opencv-mser提取身份证号码图块，使用本项目加载对应动态库
+* 然后使用javacpp提供好的org.bytedeco.javacpp-presets下的tesseract识别身份证号码
+
+
 ### 目录结构遵循[maven标准目录结构][2]
 * 此项目是用于统一加载linux和windows动态库，运用了java和scala两种语言实现,java方式已经运用到web展示，scala是研究spark预处理图像所想的思路,还未实践
 * jni具体方法参考另一个[scalacpptest][5]，其中动态库解压目录参考项目[javacpp][6]，代码详见<https://github.com/bytedeco/javacpp/blob/master/src/main/java/org/bytedeco/javacpp/Loader.java#L373-L384>
@@ -35,3 +42,4 @@
 [4]: http://plugins.jetbrains.com/plugin/?idea&id=1347
 [5]: https://git.oschina.net/smirkcat/scalacpptest
 [6]: https://github.com/bytedeco/javacpp
+[7]: https://git.oschina.net/smirkcat/loaddll-test
