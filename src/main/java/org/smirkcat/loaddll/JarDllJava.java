@@ -138,14 +138,18 @@ public class JarDllJava {
 	public static void loadLib(String libName, String dllpath, Class<?> cls) throws IOException {
 
 		String libFullName = dllpath + libName + libExtension;
+		InputStream in = cls.getResourceAsStream(libFullName);
+		if(in==null){
+			return;
+		}
+		BufferedInputStream reader = new BufferedInputStream(in);
 		tempDir = getTempDir(tempDir);
 		String filepath = tempDir.getAbsolutePath() + "/" + libName + libExtension;
+		FileOutputStream writer = null;
 		File extractedLibFile = new File(filepath);
 		if (!extractedLibFile.exists()) {
 			try {
-				InputStream in = cls.getResourceAsStream(libFullName);
-				BufferedInputStream reader = new BufferedInputStream(in);
-				FileOutputStream writer = new FileOutputStream(extractedLibFile);
+				writer = new FileOutputStream(extractedLibFile);
 				byte[] buffer = new byte[1024];
 				int len;
 				while ((len = reader.read(buffer)) != -1) {
@@ -154,15 +158,21 @@ public class JarDllJava {
 				in.close();
 				reader.close();
 				writer.close();
+				System.load(extractedLibFile.toString());
 			} catch (IOException e) {
 				if (!extractedLibFile.exists()) {
 					extractedLibFile.delete();
 				}
 				throw e;
+			}finally {
+				in.close();
+				reader.close();
+				if(writer!=null)
+					writer.close();
+				// 此行代码windows是无法执行的，linux和mac os待测试
+				if(extractedLibFile.exists())
+					extractedLibFile.deleteOnExit();
 			}
 		}
-		System.load(extractedLibFile.toString());
-		// 此行代码windows是无法执行的，linux和mac os待测试
-		extractedLibFile.deleteOnExit();
 	}
 }
