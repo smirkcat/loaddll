@@ -90,11 +90,10 @@ public class JarDllJava {
 	}
 
 	// 删除tempDir所有文件
-	public static void main(String[] args) throws InterruptedException {
+	public static void main(String[] args) throws InterruptedException  {
 		File tmpdir = new File(System.getProperty("java.io.tmpdir"));
 		File tempDir = new File(args[0]);
 		if (!tmpdir.equals(tempDir.getParentFile()) || !tempDir.getName().startsWith("dll")) {
-			// Someone is trying to break us ... ?
 			return;
 		}
 		for (File file : tempDir.listFiles()) {
@@ -114,7 +113,7 @@ public class JarDllJava {
 	public static String rootPath(Class<?> cls) {
 		String rootPath = cls.getResource("/").getFile().toString();
 		// 特别注意rootPath返回有斜杠，linux和mac下不需要去掉，windows需要去掉
-		//返回文件名末尾也有/
+		//返回文件名末尾也有斜杠/
 		if ((systemType.toLowerCase().indexOf("win") != -1)) {
 			// windows下去掉斜杠
 			rootPath = rootPath.substring(1, rootPath.length());

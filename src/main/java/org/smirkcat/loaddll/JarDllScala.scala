@@ -1,9 +1,11 @@
 package org.smirkcat.loaddll
 
 import java.io._
+import java.util.ArrayList
+import java.net.URISyntaxException
 import scala.util.control._
 import scala.collection.mutable.ListBuffer
-
+import util.Try
 
 //如果没有scala环境编译，请注释本文件
 object JarDllScala {
@@ -27,11 +29,11 @@ object JarDllScala {
   }
   val systemType: String = System.getProperty("os.name")
   val libExtension: String = {
-    val osName=systemType.toLowerCase()
-    if (osName.indexOf("win") != -1)  ".dll" 
-    else if (osName.indexOf("mac") != -1)  ".dylib"
+    val osName = systemType.toLowerCase()
+    if (osName.indexOf("win") != -1) ".dll"
+    else if (osName.indexOf("mac") != -1) ".dylib"
     else ".so"
-      }
+  }
   def rootPath(cls: Class[_]): String = {
     var rootPath = cls.getResource("/").getFile()
     // 特别注意rootPath返回有斜杠。linux下不需要去掉，windows需要去掉
@@ -43,33 +45,90 @@ object JarDllScala {
   }
   def loadlib(libName: String, dllpath: String, cls: Class[_]) {
     val libFullName = dllpath + libName + libExtension
+    val in = cls.getResourceAsStream(libFullName)
+    if (in == null) return
+    val reader = new BufferedInputStream(in)
     //java代码有一个获取tempDir的过程
     val filepath = tempDir.getAbsolutePath() + "/" + libName + libExtension
+    var writer: FileOutputStream = null
     var extractedLibFile = new File(filepath)
     if (!extractedLibFile.exists()) {
       try {
-        val in = cls.getResourceAsStream(libFullName)
-        val reader = new BufferedInputStream(in)
-        val writer = new FileOutputStream(extractedLibFile)
+        writer = new FileOutputStream(extractedLibFile)
         //参考下面网址
         //http://wtqq520.iteye.com/blog/1540433
         //http://blog.csdn.net/lyrebing/article/details/20362227
         var buf = ListBuffer[Byte]()
-        var b = reader.read()
-        while (b != -1) {
+        var b: Int = -1
+        while ((b = reader.read()) != -1) {
           buf.append(b.byteValue)
-          b = reader.read()
         }
+        in.close()
+        reader.close()
+        writer.close()
+        System.load(extractedLibFile.toString())
       } catch {
         case e: IOException => {
           if (!extractedLibFile.exists()) {
-            extractedLibFile.delete();
+            extractedLibFile.delete()
           }
           throw e
         }
+      } finally {
+        in.close()
+        reader.close()
+        if (writer != null)
+          writer.close()
+        if (!extractedLibFile.exists()) {
+          extractedLibFile.deleteOnExit()
+        }
       }
     }
-    System.load(extractedLibFile.toString());
   }
+  def main(args: Array[String]): Unit = Try[Unit] {
+    val tmpdir = new File(System.getProperty("java.io.tmpdir"));
+    val tempDir = new File(args(0));
+    if (!tmpdir.equals(tempDir.getParentFile()) || !tempDir.getName().startsWith("dll")) {
+      return
+    }
+    tempDir.listFiles().foreach(
+      file => {
+        while (file.exists() && !file.delete()) {
+          Thread.sleep(100)
+        }
+      })
+    tempDir.delete()
+  }
+ def runInThread(block: () => Unit) = {
+    new Thread {
+      override def run() { block() }
+    }
+  }
+  Runtime.getRuntime().addShutdownHook(runInThread { () =>
+    {
+      if (tempDir == null) {
+        Unit
+      }
+      if (tempDir.exists()) {
+        if (libExtension == ".dll") {
+          try {
+            var command = new ArrayList[String]();
+            command.add(System.getProperty("java.home") + "/bin/java");
+            command.add("-classpath");
+            command.add((new File(
+              JarDllScala.getClass().getProtectionDomain().getCodeSource().getLocation().toURI())).toString())
+            command.add(JarDllScala.getClass().getName())
+            command.add(tempDir.getAbsolutePath()); //args(0)
+            new ProcessBuilder(command).start();
+          } catch {
+            case e: IOException =>
+              throw new RuntimeException(e)
+            case e: URISyntaxException =>
+              throw new RuntimeException(e)
+          }
+        }
+      }
+    }
+  })
 }
 
