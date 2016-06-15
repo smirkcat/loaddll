@@ -6,12 +6,13 @@ import java.net.URISyntaxException
 import scala.util.control._
 import scala.collection.mutable.ListBuffer
 import util.Try
+import util.Properties
 
 //如果没有scala环境编译，请注释本文件
 object JarDllScala {
   //注java代码是参考了javacpp里面源码获取tempDir获取的方法，scala采用static来初始化一个不能改变的变量
   val tempDir: File = {
-    val tmpdir = new File(System.getProperty("java.io.tmpdir"))
+    val tmpdir = new File(Properties.tmpDir)
     val loop = new Breaks
     //临时变量
     var tempDirf: File = null
@@ -27,7 +28,7 @@ object JarDllScala {
     }
     tempDirf
   }
-  val systemType: String = System.getProperty("os.name")
+  val systemType: String = Properties.osName
   val libExtension: String = {
     val osName = systemType.toLowerCase()
     if (osName.indexOf("win") != -1) ".dll"
@@ -38,7 +39,6 @@ object JarDllScala {
     var rootPath = cls.getResource("/").getFile()
     // 特别注意rootPath返回有斜杠。linux下不需要去掉，windows需要去掉
     if ((systemType.toLowerCase().indexOf("win") != -1)) {
-      // windows下去掉斜杠
       rootPath = rootPath.substring(1, rootPath.length())
     }
     rootPath
@@ -62,7 +62,7 @@ object JarDllScala {
         var b: Int = reader.read()
         while (b != -1) {
           buf.append(b.byteValue)
-          b= reader.read()
+          b = reader.read()
         }
         writer.write(buf.toArray)
         in.close()
@@ -87,6 +87,7 @@ object JarDllScala {
       }
     }
   }
+  //暂时没有用到
   def main(args: Array[String]): Unit = Try[Unit] {
     val tmpdir = new File(System.getProperty("java.io.tmpdir"));
     val tempDir = new File(args(0));
@@ -101,25 +102,23 @@ object JarDllScala {
       })
     tempDir.delete()
   }
- def runInThread(block: () => Unit) = {
+  
+  def runInThread(block: () => Unit) = {
     new Thread {
       override def run() { block() }
     }
   }
-  Runtime.getRuntime().addShutdownHook(runInThread { () =>
-    {
-      if (tempDir == null) {
-        Unit
-      }
-      if (tempDir.exists()) {
+  Runtime.getRuntime().addShutdownHook(runInThread {
+    () =>
+      if (tempDir != null && tempDir.exists()) {
         if (libExtension == ".dll") {
           try {
             var command = new ArrayList[String]();
-            command.add(System.getProperty("java.home") + "/bin/java");
+            command.add(Properties.javaHome + "/bin/java");
             command.add("-classpath");
             command.add((new File(
-              JarDllScala.getClass().getProtectionDomain().getCodeSource().getLocation().toURI())).toString())
-            command.add(JarDllScala.getClass().getName())
+              JarDllScala.getClass.getProtectionDomain().getCodeSource().getLocation().toURI())).toString())
+            command.add(JarDllScala.getClass.getName.replace("Scala$", "Java")) //暂时只能调用java的main函数来删除tempDir
             command.add(tempDir.getAbsolutePath()); //args(0)
             new ProcessBuilder(command).start();
           } catch {
@@ -130,7 +129,6 @@ object JarDllScala {
           }
         }
       }
-    }
   })
 }
 
