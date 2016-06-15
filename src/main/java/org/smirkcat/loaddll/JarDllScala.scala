@@ -71,7 +71,7 @@ object JarDllScala {
         System.load(extractedLibFile.toString())
       } catch {
         case e: IOException => {
-          if (!extractedLibFile.exists()) {
+          if (extractedLibFile.exists()) {
             extractedLibFile.delete()
           }
           throw e
@@ -81,7 +81,7 @@ object JarDllScala {
         reader.close()
         if (writer != null)
           writer.close()
-        if (!extractedLibFile.exists()) {
+        if (extractedLibFile.exists()) {
           extractedLibFile.deleteOnExit()
         }
       }

@@ -159,7 +159,7 @@ public class JarDllJava {
 				writer.close();
 				System.load(extractedLibFile.toString());
 			} catch (IOException e) {
-				if (!extractedLibFile.exists()) {
+				if (extractedLibFile.exists()) {
 					extractedLibFile.delete();
 				}
 				throw e;
