@@ -43,7 +43,7 @@ object JarDllScala {
     }
     rootPath
   }
-  def loadlib(libName: String, dllpath: String, cls: Class[_]) {
+  def loadLib(libName: String, dllpath: String, cls: Class[_]) {
     val libFullName = dllpath + libName + libExtension
     val in = cls.getResourceAsStream(libFullName)
     if (in == null) return
@@ -59,10 +59,12 @@ object JarDllScala {
         //http://wtqq520.iteye.com/blog/1540433
         //http://blog.csdn.net/lyrebing/article/details/20362227
         var buf = ListBuffer[Byte]()
-        var b: Int = -1
-        while ((b = reader.read()) != -1) {
+        var b: Int = reader.read()
+        while (b != -1) {
           buf.append(b.byteValue)
+          b= reader.read()
         }
+        writer.write(buf.toArray)
         in.close()
         reader.close()
         writer.close()
