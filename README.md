@@ -4,7 +4,8 @@
 * java综合测试请看项目[loaddll-test][7]
  * 它是使用opencv-mser提取身份证号码图块，使用本项目加载对应动态库
  * 然后使用javacpp提供好的org.bytedeco.javacpp-presets下的tesseract识别身份证号码
-* scala测试请看项目[scalacpptest][5]的[loaddll][10]分支
+* scala和java简单jni测试请看项目[scalacpptest][5]的[loaddll][10]分支
+* jni调用c++自定义类请查看项目[imgjni][11],其重写了`JNI_OnLoad`函数，来替换函数映射关系达到作用
 
 ### 目录结构遵循[maven标准目录结构][2]
 * 此项目是用于统一加载linux和windows动态库，运用了java和scala两种语言实现,java方式已经运用到web展示，scala是研究spark预处理图像所想的思路,还未实践
@@ -13,8 +14,8 @@
 * 本项目适合只需要解压动态库功能，一个类就解决问题，路径可自己决定
 
 ### 项目地址
-+[github][8]
-+[oschina][9]
++ [github][8]
++ [oschina][9]
 
 ### 思考，tempDir应该放在一个类下或者两个类比较统一，这样才不会重复解压动态库，加载不同路径动态库
 
@@ -51,3 +52,4 @@
 [8]: https://github.com/smirkcat/loaddll
 [9]: https://git.oschina.net/smirkcat/loaddll
 [10]: https://git.oschina.net/smirkcat/scalacpptest/tree/loaddll
+[11]: https://git.oschina.net/smirkcat/ImgJni
