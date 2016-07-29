@@ -65,9 +65,6 @@ object JarDllScala {
           b = reader.read()
         }
         writer.write(buf.toArray)
-        in.close()
-        reader.close()
-        writer.close()
         System.load(extractedLibFile.toString())
       } catch {
         case e: IOException => {
@@ -102,33 +99,38 @@ object JarDllScala {
       })
     tempDir.delete()
   }
-  
-  def runInThread(block: () => Unit) = {
+  //抽象控制  
+  def runInThread(block: => Unit) = {
+    new Thread {
+      override def run() { block }
+    }
+  }
+  // 隐式转换 addShutdownHook无法调用成功，不知道怎么解决
+  implicit def inThread(block: () => Unit) = {
     new Thread {
       override def run() { block() }
     }
   }
-  Runtime.getRuntime().addShutdownHook(runInThread {
-    () =>
-      if (tempDir != null && tempDir.exists()) {
-        if (libExtension == ".dll") {
-          try {
-            var command = new ArrayList[String]();
-            command.add(Properties.javaHome + "/bin/java");
-            command.add("-classpath");
-            command.add((new File(
-              JarDllScala.getClass.getProtectionDomain().getCodeSource().getLocation().toURI())).toString())
-            command.add(JarDllScala.getClass.getName.replace("Scala$", "Java")) //暂时只能调用java的main函数来删除tempDir
-            command.add(tempDir.getAbsolutePath()); //args(0)
-            new ProcessBuilder(command).start();
-          } catch {
-            case e: IOException =>
-              throw new RuntimeException(e)
-            case e: URISyntaxException =>
-              throw new RuntimeException(e)
-          }
+  Runtime.getRuntime().addShutdownHook(runInThread { () =>
+    if (tempDir != null && tempDir.exists()) {
+      if (libExtension == ".dll") {
+        try {
+          var command = new ArrayList[String]();
+          command.add(Properties.javaHome + "/bin/java");
+          command.add("-classpath");
+          command.add((new File(
+            JarDllScala.getClass.getProtectionDomain().getCodeSource().getLocation().toURI())).toString())
+          command.add(JarDllScala.getClass.getName.replace("Scala$", "Java")) //暂时只能调用java的main函数来删除tempDir
+          command.add(tempDir.getAbsolutePath()) //args(0)
+          new ProcessBuilder(command).start()
+        } catch {
+          case e: IOException =>
+            throw new RuntimeException(e)
+          case e: URISyntaxException =>
+            throw new RuntimeException(e)
         }
       }
+    }
   })
 }
 

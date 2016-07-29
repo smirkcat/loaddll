@@ -56,6 +56,7 @@ public class JarDllJava {
 
 		// shut down hook 
 		// 虚拟机关闭之前执行的钩子
+		// java8可使用lambda表达式 ,没测试完成，有语法错误
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
 			public void run() {
@@ -89,7 +90,7 @@ public class JarDllJava {
 		});
 	}
 
-	// 删除tempDir所有文件
+	// windows删除tempDir所有文件
 	public static void main(String[] args) throws InterruptedException  {
 		File tmpdir = new File(System.getProperty("java.io.tmpdir"));
 		File tempDir = new File(args[0]);
@@ -154,9 +155,6 @@ public class JarDllJava {
 				while ((len = reader.read(buffer)) != -1) {
 					writer.write(buffer, 0, len);
 				}
-				in.close();
-				reader.close();
-				writer.close();
 				System.load(extractedLibFile.toString());
 			} catch (IOException e) {
 				if (extractedLibFile.exists()) {
@@ -168,7 +166,7 @@ public class JarDllJava {
 				reader.close();
 				if(writer!=null)
 					writer.close();
-				// 此行代码windows是无法执行的，linux和mac os待测试
+				// 此行代码windows是无法执行的，linux和os x已经测试，可以删除
 				if(extractedLibFile.exists())
 					extractedLibFile.deleteOnExit();
 			}
