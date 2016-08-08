@@ -65,6 +65,9 @@ object JarDllScala {
           b = reader.read()
         }
         writer.write(buf.toArray)
+        in.close()
+        reader.close()
+        writer.close()
         System.load(extractedLibFile.toString())
       } catch {
         case e: IOException => {
@@ -74,8 +77,10 @@ object JarDllScala {
           throw e
         }
       } finally {
-        in.close()
-        reader.close()
+        if (in!= null)
+          in.close()
+        if (reader!= null)
+          reader.close()
         if (writer != null)
           writer.close()
         if (extractedLibFile.exists()) {

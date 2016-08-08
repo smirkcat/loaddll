@@ -155,6 +155,9 @@ public class JarDllJava {
 				while ((len = reader.read(buffer)) != -1) {
 					writer.write(buffer, 0, len);
 				}
+				in.close();
+				reader.close();
+				writer.close();
 				System.load(extractedLibFile.toString());
 			} catch (IOException e) {
 				if (extractedLibFile.exists()) {
@@ -162,8 +165,10 @@ public class JarDllJava {
 				}
 				throw e;
 			}finally {
-				in.close();
-				reader.close();
+				if(in!=null)
+					in.close();
+				if(reader!=null)
+					reader.close();
 				if(writer!=null)
 					writer.close();
 				// 此行代码windows是无法执行的，linux和os x已经测试，可以删除
