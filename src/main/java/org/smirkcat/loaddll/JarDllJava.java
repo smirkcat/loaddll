@@ -43,7 +43,7 @@ public class JarDllJava {
 	}
 
 	static {
-		// https://github.com/bytedeco/javacpp/blob/master/src/main/java/org/bytedeco/javacpp/Loader.java#L68-L96
+		// https://github.com/bytedeco/javacpp/blob/master/src/main/java/org/bytedeco/javacpp/Loader.java#L77-L108
 		systemType = System.getProperty("os.name");
 		String osName = systemType.toLowerCase();
 		if (osName.indexOf("win") != -1) {
@@ -54,7 +54,8 @@ public class JarDllJava {
 			libExtension = ".so";
 		}
 
-		// shut down hook 
+		// javacpp1.2.5版本已经移除  https://github.com/bytedeco/javacpp/commit/076fd04173bf305eed39d8a64da79acbd5105ef2  比对代码 我暂时不知道为什么
+		// shut down hook  
 		// 虚拟机关闭之前执行的钩子
 		// java8可使用lambda表达式 ,没测试完成，有语法错误
 		Runtime.getRuntime().addShutdownHook(new Thread() {

@@ -9,8 +9,8 @@
 
 ### 目录结构遵循[maven标准目录结构][2]
 * 此项目是用于统一加载linux和windows动态库，运用了java和scala两种语言实现,java方式已经运用到web展示，scala是研究spark预处理图像所想的思路,还未实践
-* jni具体方法参考另一个[scalacpptest][5]，其中动态库解压目录参考项目[javacpp][6]，代码详见<https://github.com/bytedeco/javacpp/blob/master/src/main/java/org/bytedeco/javacpp/Loader.java#L393-L406>
-* 本项目思路是解压jar包动态库至java.io.tmpdir下动态生成一个跟时间戳相关文件夹下，使用绝对路径加载方法	System.load()加载
+* jni具体方法参考另一个[scalacpptest][5]，其中动态库解压目录参考项目[javacpp][6]，代码详见<https://github.com/bytedeco/javacpp/blob/master/src/main/java/org/bytedeco/javacpp/Loader.java#L646-L660>
+* 本项目思路是解压jar包动态库至java.io.tmpdir下动态生成一个跟时间戳相关文件夹下，使用绝对路径加载方法 System.load()加载
 * 本项目适合只需要解压动态库功能，一个类就解决问题，路径可自己决定
 
 ### 项目地址
